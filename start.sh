@@ -1,13 +1,24 @@
+# docker rmi -f plex
+docker rm -f plex
+
+if [ -z "$1" ]
+then
+    media_location='/media/drew/Expansion Drive/Movies';
+else
+    media_location=$1;
+fi
+
+echo media_location is \"$media_location\"
+
 docker run \
+--restart unless-stopped \
 -d \
 --name plex \
---network=physical \
---ip=<IPAddress> \
--e TZ="<timezone>" \
--e PLEX_CLAIM="<claimToken>" \
--h <HOSTNAME> \
--v <path/to/plex/database>:/config \
--v <path/to/transcode/temp>:/transcode \
--v <path/to/media>:/data \
+--network=host \
+-e TZ="America/Chicago" \
+-e PLEX_CLAIM="$(cat claim.txt)" \
+-v "$(pwd)/db":/config \
+-v "$(pwd)/transcode_temp":/transcode \
+-v "$media_location":/data \
 plexinc/pms-docker
 
