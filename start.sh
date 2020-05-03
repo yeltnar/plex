@@ -1,5 +1,6 @@
 # docker rmi -f plex
 docker rm -f plex
+docker pull plexinc/pms-docker
 
 if [ -z "$1" ]
 then
@@ -11,7 +12,6 @@ fi
 echo media_location is \"$media_location\"
 
 docker run \
---restart unless-stopped \
 -d \
 --name plex \
 --network=host \
@@ -20,5 +20,6 @@ docker run \
 -v "$(pwd)/db":/config \
 -v "$(pwd)/transcode_temp":/transcode \
 -v "$media_location":/data \
+--rm \
 plexinc/pms-docker
 
